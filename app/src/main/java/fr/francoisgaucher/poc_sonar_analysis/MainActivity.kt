@@ -1,9 +1,11 @@
 package fr.francoisgaucher.poc_sonar_analysis
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
@@ -11,10 +13,10 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnCompleteListener
 import fr.francoisgaucher.poc_sonar_analysis.repositories.WeatherRepositoryImpl
@@ -34,8 +36,12 @@ class MainActivity : AppCompatActivity() {
 
         mainActivityViewModel = MainActivityViewModel(null, Dispatchers.IO, WeatherRepositoryImpl())
 
-        Log.d("SONAR ERROR", "We don't have Lines should not be too long")
-        mainActivityViewModel.mutableCurrentWeatherLiveData.observe(this) { startActivity(DisplayInformationActivity.newIntent(this, it), ActivityOptions.makeSceneTransitionAnimation(this).toBundle()) }
+        mainActivityViewModel.mutableCurrentWeatherLiveData.observe(this) {
+            startActivity(
+                DisplayInformationActivity.newIntent(this, it),
+                ActivityOptions.makeSceneTransitionAnimation(this).toBundle()
+            )
+        }
 
         findViewById<View>(R.id.main_activity_current_weather_button).setOnClickListener {
             if (cityLocation == null) {
@@ -48,10 +54,8 @@ class MainActivity : AppCompatActivity() {
                     getLastLocation()
                 }
             } else {
-                cityLocation?.let {
+                    mainActivityViewModel.getCurrentWeather(cityLocation!!)
                     cityLocation = null
-                    mainActivityViewModel.getCurrentWeather(it)
-                }
             }
         }
 
@@ -64,72 +68,86 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getLastLocation() {
-        if (isLocationEnabled()) {
-            // TODO I have to do something here but i don't know what !!!
-            // TODO Maybe Lint tel me what ;)
-            mFusedLocationClient!!.lastLocation.addOnCompleteListener(OnCompleteListener<Location?> { task ->
-                val location = task.result
-                if (location == null) {
-                    requestNewLocationData()
-                } else {
-                    // Don't use SYSO !!! & Remove Log
-                    System.out.println("" + location.latitude.toString() + ":" + location.longitude.toString())
-                    Log.d("LOG", "" + location.latitude.toString() + ":" + location.longitude.toString())
-                    // Extract this into a specific method !
-                    val gcd = Geocoder(this, Locale.getDefault())
-                    val addresses: List<Address> = gcd.getFromLocation(location.latitude, location.longitude, 1)
-                    if (addresses.size > 0) {
-                        cityLocation = addresses[0].getLocality()
-                        Log.d("LOG", "" + addresses[0].getLocality())
-                        findViewById<EditText>(R.id.main_activity_input).setText(cityLocation)
-                    }
-                    if(true){
-                        Log.d("SONAR ERROR", "We don't have use 'useless' block")
-                    }
-
-                    // latitudeTextView.setText(location.latitude.toString() + "")
-                    // longitTextView.setText(location.longitude.toString() + "")
-                }
-            })
-        } else {
-            startActivity(Intent(ACTION_LOCATION_SOURCE_SETTINGS))
-        }
+    private fun checkPermissions(): Boolean {
+        return (ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+            )
     }
 
-    private fun unusedMethod(){
-        Log.d("SONAR ERROR", "We don't have unused method")
+    @SuppressLint("MissingPermission")
+    private fun getLastLocation() {
+        if (checkPermissions()) {
+            if (isLocationEnabled()) {
+                mFusedLocationClient?.lastLocation?.addOnCompleteListener(OnCompleteListener<Location?> { task ->
+                    val location = task.result
+                    if (location == null) {
+                        requestNewLocationData()
+                    } else {
+                        defineCityLocationWithLocation(location)
+                    }
+                })
+            } else {
+                startActivity(Intent(ACTION_LOCATION_SOURCE_SETTINGS))
+            }
+        } else {
+            requestPermissions()
+        }
     }
 
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
-
-        // Initializing LocationRequest
-        // object with appropriate methods
         val mLocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         mLocationRequest.interval = 5
         mLocationRequest.fastestInterval = 0
         mLocationRequest.numUpdates = 1
 
-        // setting LocationRequest
-        // on FusedLocationClient
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        mFusedLocationClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper())
+        mFusedLocationClient?.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper() ?: Looper.getMainLooper())
     }
 
     private val mLocationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            val mLastLocation: Location = locationResult.lastLocation
-            // TODO remove this !
-            Log.d("LOG", "" + mLastLocation.latitude.toString() + ":" + mLastLocation.longitude.toString())
-            // latitudeTextView.setText("Latitude: " + mLastLocation.latitude + "")
-            // longitTextView.setText("Longitude: " + mLastLocation.longitude + "")
+            defineCityLocationWithLocation(locationResult.lastLocation)
+        }
+    }
+
+    private fun defineCityLocationWithLocation(location: Location) {
+        val gcd = Geocoder(this@MainActivity.applicationContext, Locale.getDefault())
+        val addresses: List<Address> = gcd.getFromLocation(location.latitude, location.longitude, 1)
+        if (addresses.isNotEmpty()) {
+            cityLocation = addresses[0].locality
+            findViewById<EditText>(R.id.main_activity_input).setText(cityLocation)
         }
     }
 
     private fun isLocationEnabled(): Boolean {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    private fun requestPermissions() {
+        ActivityCompat.requestPermissions(
+            this, arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ), PERMISSION_ID
+        )
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_ID && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getLastLocation()
+        }
+    }
+
+    companion object {
+        private const val PERMISSION_ID = 44
     }
 }

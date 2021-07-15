@@ -2,12 +2,14 @@ package fr.francoisgaucher.poc_sonar_analysis.modals
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+import retrofit2.http.Field
 
 data class Current(
     val condition: Condition,
-    val feelslike_c: Double,
-    val temp_c: Double,
-    val temp_f: Double
+    @SerializedName("feelslike_c") val feelslikeC: Double,
+    @SerializedName("temp_c") val tempC: Double,
+    @SerializedName("temp_f") val tempF: Double
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readParcelable(Condition::class.java.classLoader)!!,
@@ -18,9 +20,9 @@ data class Current(
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeParcelable(condition, flags)
-        parcel.writeDouble(feelslike_c)
-        parcel.writeDouble(temp_c)
-        parcel.writeDouble(temp_f)
+        parcel.writeDouble(feelslikeC)
+        parcel.writeDouble(tempC)
+        parcel.writeDouble(tempF)
     }
 
     override fun describeContents(): Int {
@@ -28,7 +30,7 @@ data class Current(
     }
 
     override fun toString(): String {
-        return "Current(condition=$condition, feelslike_c=$feelslike_c, temp_c=$temp_c, temp_f=$temp_f)"
+        return "Current(condition=$condition, feelslikeC=$feelslikeC, tempC=$tempC, tempF=$tempF)"
     }
 
     companion object CREATOR : Parcelable.Creator<Current> {

@@ -2,6 +2,7 @@ package fr.francoisgaucher.poc_sonar_analysis
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.view.View
 import android.widget.TextView
 import androidx.test.core.app.ActivityScenario
@@ -17,7 +18,9 @@ import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
@@ -26,6 +29,7 @@ import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -49,57 +53,36 @@ class MainActivityTest {
         Intents.release()
     }
 
+    private fun grantPermission() {
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        if (Build.VERSION.SDK_INT >= 23) {
+            val allowPermission = UiDevice.getInstance(instrumentation).findObject(
+                UiSelector().text(
+                    when {
+                        Build.VERSION.SDK_INT == 23 -> "Allow"
+                        Build.VERSION.SDK_INT <= 28 -> "ALLOW"
+                        Build.VERSION.SDK_INT == 29 -> "Allow only while using the app"
+                        else -> "While using the app"
+                    }
+                )
+            )
+            if (allowPermission.exists()) {
+                allowPermission.click()
+            }
+        }
+    }
+
     @Test
     fun checkLocationServiceEnabled() {
         val intent = Intent(ApplicationProvider.getApplicationContext<Context>(), MainActivity::class.java)
-        val scenario = ActivityScenario.launch<MainActivity>(intent)
+        ActivityScenario.launch<MainActivity>(intent)
 
         val device = UiDevice.getInstance(getInstrumentation())
-//        device.openQuickSettings()
-//        val cancelButton: UiObject = device.findObject(
-//            UiSelector().text("Location")
-//        )
-
-//        if(cancelButton.exists() && (cancelButton.isSelected || cancelButton.isChecked || cancelButton.isEnabled)){
-//            cancelButton.click()
-//            Thread.sleep(100)
-//
-//            device.pressBack()
-//            Thread.sleep(100)
-//            device.pressBack()
-//        }else{
-//            device.pressBack()
-//            Thread.sleep(100)
-//
-//            device.pressBack()
-//        }
-
-//        Thread.sleep(4000)
 
         onView(withId(R.id.main_activity_my_location))
             .perform(click())
-//
 
-        val onlyThisTime: UiObject = device.findObject(
-            UiSelector().text("Only this time")
-        )
-        if(onlyThisTime.exists()){
-            onlyThisTime.click()
-        }
-
-        val allow: UiObject = device.findObject(
-            UiSelector().text("ALLOW")
-        )
-        if(allow.exists()){
-            allow.click()
-        }
-
-        val agree: UiObject = device.findObject(
-            UiSelector().text("AGREE")
-        )
-        if(agree.exists()){
-            agree.click()
-        }
+        grantPermission()
 
         val useLocation: UiObject = device.findObject(
             UiSelector().text("Use location")
@@ -115,21 +98,18 @@ class MainActivityTest {
         }
         Thread.sleep(1000)
 
-        val text = getText(onView(withId(R.id.main_activity_input))).toUpperCase()
-
         onView(withId(R.id.main_activity_current_weather_button)).perform(click())
         onView(withId(R.id.main_activity_current_weather_button)).perform(click())
 
         Thread.sleep(2000)
 
         onView(withId(R.id.display_information_activity_city_name)).check(ViewAssertions.matches(isDisplayed()))
-//        onView(withId(R.id.display_information_activity_city_name)).check(ViewAssertions.matches(withText(text)))
     }
 
     @Test
     fun typeCityNameAndCheckIfDataAreReceived() {
         val intent = Intent(ApplicationProvider.getApplicationContext<Context>(), MainActivity::class.java)
-        val scenario = ActivityScenario.launch<MainActivity>(intent)
+        ActivityScenario.launch<MainActivity>(intent)
 
         Thread.sleep(100)
 
@@ -152,12 +132,33 @@ class MainActivityTest {
 
         onView(withId(R.id.main_activity_my_location))
             .perform(click())
+        grantPermission()
+        Thread.sleep(3000)
 
-        val text = getText(onView(withId(R.id.main_activity_input)))
-        onView(withId(R.id.main_activity_current_weather_button)).perform(click())
         onView(withId(R.id.main_activity_current_weather_button)).perform(click())
 
-        Thread.sleep(6000)
+        Thread.sleep(3000)
+
+        onView(withId(R.id.display_information_activity_city_name)).check(ViewAssertions.matches(isDisplayed()))
+    }
+
+    @Test
+    fun doubleDetectOwnGeolocationAndCheckIfDataAreReceived() {
+
+        val intent = Intent(ApplicationProvider.getApplicationContext<Context>(), MainActivity::class.java)
+        ActivityScenario.launch<MainActivity>(intent)
+
+        onView(withId(R.id.main_activity_my_location))
+            .perform(click())
+        grantPermission()
+        Thread.sleep(3000)
+        onView(withId(R.id.main_activity_my_location))
+            .perform(click())
+        Thread.sleep(3000)
+
+        onView(withId(R.id.main_activity_current_weather_button)).perform(click())
+
+        Thread.sleep(3000)
 
         onView(withId(R.id.display_information_activity_city_name)).check(ViewAssertions.matches(isDisplayed()))
     }
@@ -168,47 +169,14 @@ class MainActivityTest {
     fun goToNextScreen() {
 
         val intent = Intent(ApplicationProvider.getApplicationContext<Context>(), MainActivity::class.java)
-        val scenario = ActivityScenario.launch<MainActivity>(intent)
+        ActivityScenario.launch<MainActivity>(intent)
 
         onView(withId(R.id.main_activity_current_weather_button)).perform(click())
+        grantPermission()
 
         Thread.sleep(4000)
         onView(withId(R.id.main_activity_current_weather_button)).perform(click())
-        Thread.sleep(2000)
-        onView(withId(R.id.display_information_activity_city_name)).check(ViewAssertions.matches(isDisplayed()))
-    }
-
-    @Test
-    fun requestPermission() {
-
-        val intent = Intent(ApplicationProvider.getApplicationContext<Context>(), MainActivity::class.java)
-        val scenario = ActivityScenario.launch<MainActivity>(intent)
-
-        onView(withId(R.id.main_activity_current_weather_button)).perform(click())
-
         Thread.sleep(4000)
-        onView(withId(R.id.main_activity_current_weather_button)).perform(click())
-        Thread.sleep(2000)
         onView(withId(R.id.display_information_activity_city_name)).check(ViewAssertions.matches(isDisplayed()))
-    }
-
-    private fun getText(matcher: ViewInteraction): String {
-        var text = String()
-        matcher.perform(object : ViewAction {
-            override fun getConstraints(): Matcher<View> {
-                return isAssignableFrom(TextView::class.java)
-            }
-
-            override fun getDescription(): String {
-                return "Text of the view"
-            }
-
-            override fun perform(uiController: UiController, view: View) {
-                val tv = view as TextView
-                text = tv.text.toString()
-            }
-        })
-
-        return text
     }
 }

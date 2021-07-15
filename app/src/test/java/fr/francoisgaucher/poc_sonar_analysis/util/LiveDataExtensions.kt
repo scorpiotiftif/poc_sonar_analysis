@@ -1,4 +1,4 @@
-package fr.francoisgaucher.poc_sonar_analysis.extensions
+package fr.francoisgaucher.poc_sonar_analysis.util
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -37,6 +37,3 @@ fun <T> LiveData<T>.getOrAwaitValue(
     @Suppress("UNCHECKED_CAST")
     return data as T
 }
-
-fun ViewModel.getViewModelScope(coroutineScope: CoroutineScope?) =
-    coroutineScope ?: this.viewModelScope

@@ -14,7 +14,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
@@ -61,7 +62,8 @@
             android:layout_height="24dp"
             app:layout_constraintTop_toTopOf="@+id/display_information_activity_actual_feeling"
             app:layout_constraintBottom_toBottomOf="@+id/display_information_activity_actual_feeling"
-            app:layout_constraintEnd_toStartOf="@+id/display_information_activity_actual_feeling"/>
+            app:layout_constraintEnd_toStartOf="@+id/display_information_activity_actual_feeling"
+            tools:ignore="ContentDescription" />
 
         <TextView
             style="@style/Theme.POC_sonar_analysis.Text.Secondary.Body"

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="app_name">POC_sonar_analysis</string>
-    <string name="current_weather">Current Weather ?</string>
     <string name="check_real_time_weather">Check real-time\nweather!</string>
     <string name="get_the_latest_information_from_the_city_of_your_choice_in_real_time">Get the latest information from the city of your choice in real time.</string>
+    <string name="temperatures">%1$f°C / %2$f°F</string>
+    <string name="city">City</string>
+    <string name="next">Next</string>
 </resources>

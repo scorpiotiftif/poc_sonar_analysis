@@ -2,7 +2,7 @@ package fr.francoisgaucher.poc_sonar_analysis
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import fr.francoisgaucher.poc_sonar_analysis.extensions.getViewModelScope
 import fr.francoisgaucher.poc_sonar_analysis.modals.CurrentWeather
 import fr.francoisgaucher.poc_sonar_analysis.repositories.WeatherRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -14,7 +14,7 @@ class MainActivityViewModel(
     private val defaultDispatcher: CoroutineDispatcher,
     private val weatherRepository: WeatherRepository
 ) : ViewModel() {
-    private val coroutineScope = coroutineScopeProvider ?: viewModelScope
+    private val coroutineScope = getViewModelScope(coroutineScopeProvider)
     val mutableCurrentWeatherLiveData = MutableLiveData<CurrentWeather>()
 
     fun getCurrentWeather(cityName: String) {

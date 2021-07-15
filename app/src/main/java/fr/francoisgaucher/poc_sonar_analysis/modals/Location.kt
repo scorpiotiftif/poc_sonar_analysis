@@ -2,36 +2,38 @@ package fr.francoisgaucher.poc_sonar_analysis.modals
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+import retrofit2.http.Field
 
 data class Location(
     val country: String,
     val lat: Double,
     val localtime: String,
-    val localtime_epoch: Int,
+    @SerializedName("localtime_epoch") val localtimeEpoch: Int,
     val lon: Double,
     val name: String,
     val region: String
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString() ?: "NOT_INITIALIZED",
+        parcel.readString()!!,
         parcel.readDouble(),
-        parcel.readString() ?: "NOT_INITIALIZED",
+        parcel.readString()!!,
         parcel.readInt(),
         parcel.readDouble(),
-        parcel.readString() ?: "NOT_INITIALIZED",
-        parcel.readString() ?: "NOT_INITIALIZED",
+        parcel.readString()!!,
+        parcel.readString()!!,
     ) {
     }
 
     override fun toString(): String {
-        return "Location(country='$country', lat=$lat, localtime='$localtime', localtime_epoch=$localtime_epoch, lon=$lon, name='$name', region='$region')"
+        return "Location(country='$country', lat=$lat, localtime='$localtime', localtimeEpoch=$localtimeEpoch, lon=$lon, name='$name', region='$region')"
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(country)
         parcel.writeDouble(lat)
         parcel.writeString(localtime)
-        parcel.writeInt(localtime_epoch)
+        parcel.writeInt(localtimeEpoch)
         parcel.writeDouble(lon)
         parcel.writeString(name)
         parcel.writeString(region)

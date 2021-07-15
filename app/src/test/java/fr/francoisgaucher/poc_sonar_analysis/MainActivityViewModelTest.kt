@@ -1,26 +1,21 @@
 package fr.francoisgaucher.poc_sonar_analysis
 
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import fr.francoisgaucher.poc_sonar_analysis.extensions.getOrAwaitValue
 import fr.francoisgaucher.poc_sonar_analysis.modals.Condition
 import fr.francoisgaucher.poc_sonar_analysis.modals.Current
 import fr.francoisgaucher.poc_sonar_analysis.modals.CurrentWeather
 import fr.francoisgaucher.poc_sonar_analysis.modals.Location
 import fr.francoisgaucher.poc_sonar_analysis.repositories.WeatherRepository
 import fr.francoisgaucher.poc_sonar_analysis.util.MainCoroutineRule
+import fr.francoisgaucher.poc_sonar_analysis.util.getOrAwaitValue
 import io.mockk.coEvery
 import io.mockk.mockkClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
 import org.junit.*
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.doReturn
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -49,7 +44,7 @@ class MainActivityViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         repo = mockkClass(WeatherRepository::class)
-        viewModel = MainActivityViewModel(testScope, testDispatcher,repo)
+        viewModel = MainActivityViewModel(testScope, testDispatcher, repo)
     }
 
     @After

@@ -16,7 +16,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <EditText
         android:id="@+id/main_activity_input"
@@ -29,7 +30,7 @@
         android:drawablePadding="20dp"
         android:drawableTint="@color/purple_500"
         android:gravity="bottom"
-        android:hint="City"
+        android:hint="@string/city"
         android:importantForAutofill="no"
         android:inputType="text"
         android:paddingHorizontal="10dp"
@@ -50,7 +51,8 @@
         android:src="@drawable/outline_my_location_24"
         app:layout_constraintBottom_toBottomOf="@+id/main_activity_input"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/main_activity_input" />
+        app:layout_constraintTop_toTopOf="@+id/main_activity_input"
+        tools:ignore="ContentDescription" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
@@ -110,7 +112,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="Next"
+                    android:text="@string/next"
                     android:textAlignment="center" />
             </androidx.cardview.widget.CardView>
 

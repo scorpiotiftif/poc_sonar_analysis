@@ -50,6 +50,14 @@ class DisplayActivityTest {
         onView(withId(R.id.display_information_activity_city_name)).check(ViewAssertions.matches(withText(CURRET_WEATHER.location.name)))
     }
 
+    @Test
+    fun displayNoInformations() {
+        val intent = Intent(ApplicationProvider.getApplicationContext<Context>(), DisplayInformationActivity::class.java)
+        ActivityScenario.launch<DisplayInformationActivity>(intent)
+
+        onView(withId(R.id.display_information_activity_city_name)).check(ViewAssertions.matches(isDisplayed()))
+    }
+
     companion object {
         private val CURRET_WEATHER = CurrentWeather(
             Current(

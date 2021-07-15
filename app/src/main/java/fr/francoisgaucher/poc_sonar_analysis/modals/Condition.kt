@@ -8,10 +8,9 @@ data class Condition(
     val text: String
 ):Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString()?:"NOT_INITIALIZED",
-        parcel.readString()?:"NOT_INITIALIZED"
-    ) {
-    }
+        parcel.readString()!!,
+        parcel.readString()!!
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(icon)

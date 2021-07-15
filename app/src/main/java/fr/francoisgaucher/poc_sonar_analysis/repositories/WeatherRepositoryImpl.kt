@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class WeatherRepositoryImpl : WeatherRepository {
 
     private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("https://api.weatherapi.com/v1/")
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -28,6 +28,7 @@ class WeatherRepositoryImpl : WeatherRepository {
     }
 
     companion object {
+        private const val BASE_URL = "https://api.weatherapi.com/v1/"
         private const val PASSWORD = "8aebefbce0a94cceaeb160932210107"
     }
 }
