@@ -1,0 +1,68 @@
+plugins.apply('jacoco')
+
+jacoco {
+    toolVersion = '0.8.7'
+}
+
+tasks.withType(Test) {
+    jacoco.excludes = ['jdk.internal.*']
+    jacoco.includeNoLocationClasses = true
+    ignoreFailures = true
+    maxHeapSize = '4g'
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ["lintDebug","testDebugUnitTest", "createDebugCoverageReport"]) {
+    def jacocoExecutionData = fileTree(dir: project.projectDir, includes:
+            ['**/*.exec' , '**/*.ec'])
+
+    def jacocoExcludes = [
+            '**/R.class',
+            '**/R$*.class', '**/*$InjectAdapter.*',
+            '**/*$ModuleAdapter.*',
+            '**/Dao*.*',
+            '**/*$ViewInjector*.*',
+            '**/*$ViewBinder*.*',
+            '**/*MembersInjector*.*',
+            '**/BuildConfig.*',
+            '**/*$Lambda$*.',
+            '**/*Factory*.',
+            '**/*$Builder*',
+            '**/*$Parcelable*.*',
+            '**/*DaggerApplicationComponent*.*',
+            '**/api',
+            '**/android/**/*.*',
+            '**/me/**/*.*', '**/org/**/*.*', '**/org/**/*.*'
+    ]
+    def javaClasses = 'build/intermediates/javac/debug/classes'
+    def kotlinClasses = 'build/tmp/kotlin-classes/debug'
+    def mainSources = 'src/main/java'
+    def resSources = 'src/main/res'
+    def manifestSources = 'src/main/AndroidManifest.xml'
+    def jacocoIncludes = ['**/fr/francoisgaucher/**'
+    ]
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports for the build."
+
+    executionData.setFrom(
+            jacocoExecutionData
+    )
+    sourceDirectories.setFrom(
+            files("$mainSources","$resSources","$manifestSources")
+    )
+    classDirectories.setFrom(
+            fileTree(
+                    dir: "$javaClasses",
+                    includes: jacocoIncludes,
+                    excludes: jacocoExcludes
+            ) + fileTree(
+                    dir: "$kotlinClasses",
+                    includes: jacocoIncludes,
+                    excludes: jacocoExcludes
+            )
+    )
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = true
+    }
+}

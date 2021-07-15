@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DisplayInformationActivity">
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/cloud_background_information"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingHorizontal="30dp"
+        android:paddingVertical="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            style="@style/Theme.POC_sonar_analysis.Text.Secondary.Title"
+            android:id="@+id/display_information_activity_city_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Paris"
+            android:drawablePadding="20dp"
+            app:drawableStartCompat="@drawable/outline_place_24" />
+
+        <TextView
+            style="@style/Theme.POC_sonar_analysis.Text.Secondary.Body"
+            android:id="@+id/display_information_activity_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/display_information_activity_city_name"/>
+
+        <TextView
+            style="@style/Theme.POC_sonar_analysis.Text.Secondary.Body"
+            android:id="@+id/display_information_activity_actual_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/display_information_activity_temperature"/>
+
+        <ImageView
+            android:id="@+id/display_information_activity_actual_feeling_img"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintTop_toTopOf="@+id/display_information_activity_actual_feeling"
+            app:layout_constraintBottom_toBottomOf="@+id/display_information_activity_actual_feeling"
+            app:layout_constraintEnd_toStartOf="@+id/display_information_activity_actual_feeling"/>
+
+        <TextView
+            style="@style/Theme.POC_sonar_analysis.Text.Secondary.Body"
+            android:id="@+id/display_information_activity_actual_feeling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/display_information_activity_actual_temperature"/>
+
+        <TextView
+            style="@style/Theme.POC_sonar_analysis.Text.Secondary.Body"
+            android:id="@+id/display_information_activity_country"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/display_information_activity_actual_feeling"/>
+
+        <TextView
+            style="@style/Theme.POC_sonar_analysis.Text.Secondary.Body"
+            android:id="@+id/display_information_activity_lat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/display_information_activity_country"/>
+        <TextView
+            style="@style/Theme.POC_sonar_analysis.Text.Secondary.Body"
+            android:id="@+id/display_information_activity_long"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/display_information_activity_lat"/>
+
+        <TextView
+            style="@style/Theme.POC_sonar_analysis.Text.Secondary.Body"
+            android:id="@+id/display_information_activity_localtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/display_information_activity_long"/>
+
+
+        <TextView
+            style="@style/Theme.POC_sonar_analysis.Text.Secondary.Body"
+            android:id="@+id/display_information_activity_localtime_epoch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/display_information_activity_localtime"/>
+
+        <TextView
+            style="@style/Theme.POC_sonar_analysis.Text.Secondary.Body"
+            android:id="@+id/display_information_activity_region"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/display_information_activity_localtime_epoch"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

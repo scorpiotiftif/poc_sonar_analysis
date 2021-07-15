@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.POC_sonar_analysis.Text">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+    <style name="Theme.POC_sonar_analysis.Text.Primary" parent="Theme.POC_sonar_analysis.Text">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+    <style name="Theme.POC_sonar_analysis.Text.Secondary" parent="Theme.POC_sonar_analysis.Text">
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
+
+
+    <style name="Theme.POC_sonar_analysis.Text.Primary.Title" parent="Theme.POC_sonar_analysis.Text.Primary">
+        <item name="textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+    <style name="Theme.POC_sonar_analysis.Text.Primary.Body" parent="Theme.POC_sonar_analysis.Text.Primary">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
+    <style name="Theme.POC_sonar_analysis.Text.Secondary.Title" parent="Theme.POC_sonar_analysis.Text.Secondary">
+        <item name="textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+    <style name="Theme.POC_sonar_analysis.Text.Secondary.Body" parent="Theme.POC_sonar_analysis.Text.Secondary">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
+</resources>
